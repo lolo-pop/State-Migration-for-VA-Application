@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rtmp-server
+  namespace: rtmp-streaming
+spec:
+  selector:
+    matchLabels:
+      app: nginx-rtmp-server
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: nginx-rtmp-server
+    spec:
+      containers:
+      - name: nginx-rtmp-server
+        image: "tiangolo/nginx-rtmp:latest-2021-09-17"
+        ports:
+        - containerPort: 1935

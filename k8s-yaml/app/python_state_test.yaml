@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-state
+  labels:
+    app: python-state
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-state
+  template:
+    metadata:
+      labels:
+        app: python-state
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "python-state"
+        dapr.io/app-port: "5000"
+        dapr.io/app-protocol: "grpc"
+    spec:
+      containers:
+      - name: python-state
+        image: lolopop/evaluation-app:v2
+        ports:
+        - containerPort: 5000
+        command: ["python3.7"]
+        args: ["obj_detect_tracking.py", "--is_load_from_pb", "--model_path", "obj_v3.pb", "--version", "3", "--video_dir", "v1-val_testvideos", "--video_lst_file", "v1-val_testvideos.lst", "--frame_gap", "1", "--get_tracking", "--tracking_dir", "test_track_out", "--visualize", "--vis_path", "test_vis_out", "--pubsub_name", "pubsub", "--topic", "pubsub", "--app_name", "test", "--state_store", 'statestore']
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+  # "--log_time_and_gpu", "--save_util_log_to", "gpu_util.json"  用于暂存

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pubsub
+  labels:
+    app: pubsub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pubsub
+  template:
+    metadata:
+      labels:
+        app: pubsub
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "pubsub"
+        # dapr.io/app-protocol: "grpc"
+        dapr.io/http-max-request-size: "100"
+    spec:
+      containers:
+      - name: pubsub
+        image: lolopop/pubsub:v1
+        command: ["python"]
+        args: ["publish.py", "--rtmp_server", "10.244.2.7", "--pubsub_name", "pubsub", "--app_name", "pubsub"]

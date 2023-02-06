@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+  labels:
+    app: python-state
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-state
+  template:
+    metadata:
+      labels:
+        app: python-state
+    spec:
+      nodeSelector:
+        worker: gpu-0
+      containers:
+      - name: python-state
+        image: lolopop/evaluation-app:v2
+        ports:
+        - containerPort: 5000
+        command: ["python"]
+        # args: ["obj_detect_tracking_v1.py", "--model_path", "efficientdet-d0", "--is_efficientdet", "--efficientdet_modelname", "efficientdet-d0", "--version", "3", "--video_dir", "v1-val_testvideos", "--video_lst_file", "v1-val_testvideos.lst", "--frame_gap", "1", "--get_tracking", "--tracking_dir", "test_track_out", "--visualize", "--vis_path", "test_vis_out", "--app_name", "evaluation-app", "--state_store", 'statestore1']
+        args: ["obj_detect_tracking.py", "--model_path", "efficientdet-d0", "--is_efficientdet", "--efficientdet_modelname", "efficientdet-d0", "--version", "3", "--video_dir", "v1-val_testvideos", "--video_lst_file", "v1-val_testvideos.lst", "--frame_gap", "1", "--get_tracking", "--tracking_dir", "test_track_out", "--fps", "5", '--log_time_and_gpu', "--frame_number", "100"]
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+      #- name: app-sidecar
+      #  image: lolopop/sidecar:v1
+      #  command: ['python3.7']
+      #  args: ["sidecar.py", "--rtmp_server", "10.244.2.7"]
+
+  # "--log_time_and_gpu", "--save_util_log_to", "gpu_util.json"  用于暂存
