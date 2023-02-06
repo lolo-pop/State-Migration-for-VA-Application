@@ -1,0 +1,160 @@
+nohup: ignoring input
+Sending build context to Docker daemon  1.003GB
+Step 1/29 : ARG UBUNTU_VERSION=18.04
+Step 2/29 : ARG ARCH=
+Step 3/29 : ARG CUDA=10.1
+Step 4/29 : FROM nvidia/cuda${ARCH:+-$ARCH}:${CUDA}-base-ubuntu${UBUNTU_VERSION} as base
+ ---> 63d871da0034
+Step 5/29 : ARG ARCH
+ ---> Using cache
+ ---> b888454bf710
+Step 6/29 : ARG CUDA
+ ---> Using cache
+ ---> 8b06fe813aac
+Step 7/29 : ARG CUDNN=7.6.4.38-1
+ ---> Using cache
+ ---> a3cdc5dd1ad0
+Step 8/29 : ARG CUDNN_MAJOR_VERSION=7
+ ---> Using cache
+ ---> a8956dd7fa64
+Step 9/29 : ARG LIB_DIR_PREFIX=x86_64
+ ---> Using cache
+ ---> 7ba3794fc1a4
+Step 10/29 : ARG LIBNVINFER=6.0.1-1
+ ---> Using cache
+ ---> 14acd44abc26
+Step 11/29 : ARG LIBNVINFER_MAJOR_VERSION=6
+ ---> Using cache
+ ---> 2b0120429bbf
+Step 12/29 : SHELL ["/bin/bash", "-c"]
+ ---> Using cache
+ ---> daa096bfff30
+Step 13/29 : RUN apt-get update && apt-get install -y --no-install-recommends         build-essential         cuda-command-line-tools-${CUDA/./-}         libcublas10=10.2.1.243-1         cuda-nvrtc-${CUDA/./-}         cuda-cufft-${CUDA/./-}         cuda-curand-${CUDA/./-}         cuda-cusolver-${CUDA/./-}         cuda-cusparse-${CUDA/./-}         curl         libcudnn7=${CUDNN}+cuda${CUDA}         libfreetype6-dev         libhdf5-serial-dev         libzmq3-dev         pkg-config         software-properties-common         unzip
+ ---> Using cache
+ ---> a7edd19ec6ca
+Step 14/29 : RUN [ ${ARCH} = ppc64le ] || (apt-get update &&         apt-get install -y --no-install-recommends libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA}          libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA}         && apt-get clean         && rm -rf /var/lib/apt/lists/*)
+ ---> Using cache
+ ---> 6a48dec0f713
+Step 15/29 : ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+ ---> Using cache
+ ---> fb1ccd0c545a
+Step 16/29 : RUN ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1     && echo "/usr/local/cuda/lib64/stubs" > /etc/ld.so.conf.d/z-cuda-stubs.conf     && ldconfig
+ ---> Using cache
+ ---> c8f0914d11b6
+Step 17/29 : ENV LANG C.UTF-8
+ ---> Using cache
+ ---> 2bb5962d1a13
+Step 18/29 : RUN apt-get update && apt-get install -y      python3      python3-pip      libexpat1-dev      libicu-dev      libigraph0-dev
+ ---> Using cache
+ ---> c2937e292ce2
+Step 19/29 : RUN python3 -m pip --no-cache-dir install --upgrade      pip      setuptools
+ ---> Using cache
+ ---> c70d9eb25724
+Step 20/29 : RUN ln -s $(which python3) /usr/local/bin/python
+ ---> Using cache
+ ---> 48cbce768268
+Step 21/29 : ARG TF_PACKAGE=tensorflow
+ ---> Using cache
+ ---> 6105b2fca900
+Step 22/29 : ARG TF_PACKAGE_VERSION=1.15.5
+ ---> Using cache
+ ---> 91551858efa0
+Step 23/29 : RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
+ ---> Using cache
+ ---> 325ed956ebad
+Step 24/29 : RUN apt-get update
+ ---> Using cache
+ ---> afcc65673f01
+Step 25/29 : RUN pip install scipy                 sklearn                 opencv-python                 matplotlib                 pycocotools                 psutil                 pyaml                 redis                 flask                 flask-cors
+ ---> Running in 1c7377d73ea3
+Collecting scipy
+  Downloading scipy-1.5.4-cp36-cp36m-manylinux1_x86_64.whl (25.9 MB)
+Collecting sklearn
+  Downloading sklearn-0.0.tar.gz (1.1 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting opencv-python
+  Downloading opencv_python-4.5.5.62-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (60.4 MB)
+Collecting matplotlib
+  Downloading matplotlib-3.3.4-cp36-cp36m-manylinux1_x86_64.whl (11.5 MB)
+Collecting pycocotools
+  Downloading pycocotools-2.0.3.tar.gz (106 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting psutil
+  Downloading psutil-5.9.0.tar.gz (478 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting pyaml
+  Downloading pyaml-21.10.1-py2.py3-none-any.whl (24 kB)
+Collecting redis
+  Downloading redis-4.1.0-py3-none-any.whl (171 kB)
+Collecting flask
+  Downloading Flask-2.0.2-py3-none-any.whl (95 kB)
+Collecting flask-cors
+  Downloading Flask_Cors-3.0.10-py2.py3-none-any.whl (14 kB)
+Requirement already satisfied: numpy>=1.14.5 in /usr/local/lib/python3.6/dist-packages (from scipy) (1.18.5)
+Collecting scikit-learn
+  Downloading scikit_learn-0.24.2-cp36-cp36m-manylinux2010_x86_64.whl (22.2 MB)
+Collecting pillow>=6.2.0
+  Downloading Pillow-8.4.0-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.1 MB)
+Collecting python-dateutil>=2.1
+  Downloading python_dateutil-2.8.2-py2.py3-none-any.whl (247 kB)
+Collecting kiwisolver>=1.0.1
+  Downloading kiwisolver-1.3.1-cp36-cp36m-manylinux1_x86_64.whl (1.1 MB)
+Collecting cycler>=0.10
+  Downloading cycler-0.11.0-py3-none-any.whl (6.4 kB)
+Collecting pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.3
+  Downloading pyparsing-3.0.6-py3-none-any.whl (97 kB)
+Requirement already satisfied: setuptools>=18.0 in /usr/local/lib/python3.6/dist-packages (from pycocotools) (59.6.0)
+Collecting cython>=0.27.3
+  Using cached Cython-0.29.26-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl (1.9 MB)
+Collecting PyYAML
+  Downloading PyYAML-6.0-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl (603 kB)
+Collecting deprecated>=1.2.3
+  Downloading Deprecated-1.2.13-py2.py3-none-any.whl (9.6 kB)
+Collecting packaging>=21.3
+  Downloading packaging-21.3-py3-none-any.whl (40 kB)
+Requirement already satisfied: importlib-metadata>=1.0 in /usr/local/lib/python3.6/dist-packages (from redis) (4.8.3)
+Requirement already satisfied: Werkzeug>=2.0 in /usr/local/lib/python3.6/dist-packages (from flask) (2.0.2)
+Collecting itsdangerous>=2.0
+  Downloading itsdangerous-2.0.1-py3-none-any.whl (18 kB)
+Collecting click>=7.1.2
+  Downloading click-8.0.3-py3-none-any.whl (97 kB)
+Collecting Jinja2>=3.0
+  Downloading Jinja2-3.0.3-py3-none-any.whl (133 kB)
+Requirement already satisfied: Six in /usr/lib/python3/dist-packages (from flask-cors) (1.11.0)
+Requirement already satisfied: wrapt<2,>=1.10 in /usr/local/lib/python3.6/dist-packages (from deprecated>=1.2.3->redis) (1.13.3)
+Requirement already satisfied: typing-extensions>=3.6.4 in /usr/local/lib/python3.6/dist-packages (from importlib-metadata>=1.0->redis) (4.0.1)
+Requirement already satisfied: zipp>=0.5 in /usr/local/lib/python3.6/dist-packages (from importlib-metadata>=1.0->redis) (3.6.0)
+Collecting MarkupSafe>=2.0
+  Downloading MarkupSafe-2.0.1-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl (30 kB)
+Requirement already satisfied: dataclasses in /usr/local/lib/python3.6/dist-packages (from Werkzeug>=2.0->flask) (0.8)
+Collecting threadpoolctl>=2.0.0
+  Downloading threadpoolctl-3.0.0-py3-none-any.whl (14 kB)
+Collecting joblib>=0.11
+  Downloading joblib-1.1.0-py2.py3-none-any.whl (306 kB)
+Building wheels for collected packages: sklearn, pycocotools, psutil
+  Building wheel for sklearn (setup.py): started
+  Building wheel for sklearn (setup.py): finished with status 'done'
+  Created wheel for sklearn: filename=sklearn-0.0-py2.py3-none-any.whl size=2381 sha256=da62b60cd12c21f17e6c22771b2d8c6a3e6fb93c9360de4f848e454a79b18e39
+  Stored in directory: /root/.cache/pip/wheels/23/9d/42/5ec745cbbb17517000a53cecc49d6a865450d1f5cb16dc8a9c
+  Building wheel for pycocotools (setup.py): started
+  Building wheel for pycocotools (setup.py): finished with status 'done'
+  Created wheel for pycocotools: filename=pycocotools-2.0.3-cp36-cp36m-linux_x86_64.whl size=267299 sha256=35d42ae0d4822e52e981c4eea7afc4c19ad7713bf2cc2f34530758e01d0adc70
+  Stored in directory: /root/.cache/pip/wheels/af/2e/64/1c2780138475c28ca8649d218b6f3ddb5a7dadb41f894002bd
+  Building wheel for psutil (setup.py): started
+  Building wheel for psutil (setup.py): finished with status 'done'
+  Created wheel for psutil: filename=psutil-5.9.0-cp36-cp36m-linux_x86_64.whl size=298282 sha256=821b0e0562c967f24123a98e268e59a47a304ed00713dc0c303cf52d1a77e214
+  Stored in directory: /root/.cache/pip/wheels/d0/fc/50/c4d890e081d7aa99037fd241c271c313049d5a3868b9116cdf
+Successfully built sklearn pycocotools psutil
+Installing collected packages: MarkupSafe, threadpoolctl, scipy, python-dateutil, pyparsing, pillow, kiwisolver, joblib, Jinja2, itsdangerous, cycler, click, scikit-learn, PyYAML, packaging, matplotlib, flask, deprecated, cython, sklearn, redis, pycocotools, pyaml, psutil, opencv-python, flask-cors
+Successfully installed Jinja2-3.0.3 MarkupSafe-2.0.1 PyYAML-6.0 click-8.0.3 cycler-0.11.0 cython-0.29.26 deprecated-1.2.13 flask-2.0.2 flask-cors-3.0.10 itsdangerous-2.0.1 joblib-1.1.0 kiwisolver-1.3.1 matplotlib-3.3.4 opencv-python-4.5.5.62 packaging-21.3 pillow-8.4.0 psutil-5.9.0 pyaml-21.10.1 pycocotools-2.0.3 pyparsing-3.0.6 python-dateutil-2.8.2 redis-4.1.0 scikit-learn-0.24.2 scipy-1.5.4 sklearn-0.0 threadpoolctl-3.0.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[0mRemoving intermediate container 1c7377d73ea3
+ ---> 6b5cb9ff6c74
+Step 26/29 : RUN pip install dapr                 dapr-ext-grpc                 dapr-ext-fastapi
+ ---> Running in f4bd8ea0c05b
+[91mERROR: Could not find a version that satisfies the requirement dapr (from versions: none)
+ERROR: No matching distribution found for dapr
+[0mThe command '/bin/bash -c pip install dapr                 dapr-ext-grpc                 dapr-ext-fastapi' returned a non-zero code: 1
